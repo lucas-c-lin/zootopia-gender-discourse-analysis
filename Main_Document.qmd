@@ -62,56 +62,67 @@ Student ID: [xxx]
 # Introduction
 
 ## TL;DR
-```{mermaid}
-graph TD
-    %% 全局设置
-    accTitle: Research Workflow for Zootopia Discourse Analysis
-    
-    Start([Web Scraping: Movie Transcripts]) --> Clean[Data Preprocessing & Corpus Standardization]
-    Clean --> Join[Metadata Integration: Character Attributes]
 
-    %% 主分支
-    Join --> BranchA{Path A: Lexical Diversity}
-    Join --> BranchB{Path B: Sentiment Dynamics}
-    Join --> BranchC{Path C: Extended Case Study}
+The project follows a modular pipeline, from raw data acquisition to advanced statistical modeling (LMM).
 
-    %% A线：TTR
-    subgraph "A: Lexical Complexity"
-        BranchA --> TTR1[Per-Utterance TTR Calculation]
-        TTR1 --> TTR2[Comparative Analysis: Mean TTR]
-        TTR1 --> TTR3[Mixed-Effects Modeling: LMM]
-    end
+::: {.grid}
 
-    %% B线：情感分析
-    subgraph "B: Sentiment Analysis"
-        BranchB --> S1{Dictionary Selection}
-        
-        subgraph "B1: AFINN (Lexicon-based)"
-            S1 --> B1a[Sentiment Scoring]
-            B1a --> B1b[Group Difference Testing]
-            B1a --> B1c[Statistical Modeling: GAMM]
-        end
-        
-        subgraph "B2: sentimentr (Context-aware)"
-            S1 --> B2a[Valence Shifting Analysis]
-            B2a --> B2b[Group Difference Testing]
-            B2a --> B2c[Statistical Modeling: GAMM]
-        end
-    end
+::: {.g-col-12}
+### Phase 1: Data Preparation
+1. **Web Scraping**: Extracting movie transcripts from the [Zootopia Fandom Wiki](https://zootopia.fandom.com/wiki/Zootopia/Transcript).
+2. **Corpus Standardization**: Data cleaning and structured corpus construction.
+3. **Metadata Integration**: Joining character attributes (gender, species) from `Character_info.csv`.
 
-    %% C线：Judy vs Nick
-    subgraph "C: Diachronic Case Study (Judy vs. Nick)"
-        BranchC --> C1[Sub-corpus Extraction: Protagonists]
-        C1 --> C2[Narrative Arc Tracking: Sentiment/TTR]
-        C2 --> C3[Interactional Analysis & Comparison]
-    end
+### Phase 2: Analysis
 
-    %% 样式
-    style Start fill:#f9f,stroke:#333,stroke-width:2px
-    style BranchA fill:#bbf,stroke:#333
-    style BranchB fill:#bbf,stroke:#333
-    style BranchC fill:#dfd,stroke:#333
-```
+:::
+
+::: {.g-col-12 .g-col-md-4}
+::: {.callout-note appearance="minimal"}
+## [A] Lexical Complexity
+
+Investigating vocabulary density across gender groups.
+
+- **Metric**: Type-Token Ratio (TTR) per utterance.
+
+- **Comparison**: Mean TTR difference testing.
+
+- **Modeling**: **Linear Mixed-Effects (LMM)** to control for character-level variation.
+
+:::
+:::
+
+::: {.g-col-12 .g-col-md-4}
+::: {.callout-warning appearance="minimal"}
+## [B] Sentiment Dynamics
+
+Comparing dictionary-based vs. context-aware algorithms.
+
+- **Path 1 (AFINN)**:
+
+  - Sentiment scoring ➔ Mean comparison ➔ **LMM Modeling**.
+
+- **Path 2 (sentimentr)**:
+
+  - Sentiment scoring ➔ Mean comparison ➔ **LMM Modeling**.
+
+:::
+:::
+
+::: {.g-col-12 .g-col-md-4}
+::: {.callout-tip appearance="minimal"}
+## [C] Extended: Case Study
+
+A diachronic deep-dive into the film's protagonists.
+
+- **Target**: Judy Hopps vs. Nick Wilde.
+
+- **Goal**: Evaluating individual development vs. collective gender patterns.
+
+:::
+:::
+
+:::
 
 ## Research Question
 
