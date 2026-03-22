@@ -1,6 +1,8 @@
 # zootopia-gender-discourse-analysis
 A quantitative discourse analysis of Zootopia characters through a gender lens. Utilizing R (sentimentr, AFINN, Mixed-effects models) to examine Type-Token Ratio (TTR) and sentiment scores. Findings suggest gender de-differentiation in modern animation, supporting values of gender equality.
 
+**visit the html:** [Quarto HTML](https://lucas-c-lin.github.io/zootopia-gender-discourse-analysis/)
+
 ## Project Overview
 
 This repository contains a comprehensive digital humanities analysis of gender representation in the animated film *Zootopia*. Using quantitative text analysis and sentiment analysis techniques, we examine discourse features of male and female characters to investigate whether the film reflects gender equality values through its narrative texts.
