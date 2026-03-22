@@ -11,6 +11,10 @@ format:
     number-sections: true
 ---
 
+::: {.callout-note}
+This is a coursework assignment for the *Introduction to Digital Humanities* course. I have now revised and polished it slightly (the original submission was rushed to meet the deadline and rather rough), and I’ve uploaded it to GitHub for everyone to study together.
+:::
+
 ::: {.callout-tip}
 ## 📝 Abstract
 - **Purpose:** This study aims to analyze **the discourse features of characters** in *Zootopia*, with a specific focus on examining these features through **a gender lens**.
@@ -57,9 +61,59 @@ Student ID: [xxx]
 
 # Introduction
 
-## Research Question
+## TL;DR
+```{mermaid}
+graph TD
+    %% 全局设置
+    accTitle: Research Workflow for Zootopia Discourse Analysis
+    
+    Start([Web Scraping: Movie Transcripts]) --> Clean[Data Preprocessing & Corpus Standardization]
+    Clean --> Join[Metadata Integration: Character Attributes]
 
-*Start with the question that drives your curiosity.* 
+    %% 主分支
+    Join --> BranchA{Path A: Lexical Diversity}
+    Join --> BranchB{Path B: Sentiment Dynamics}
+    Join --> BranchC{Path C: Extended Case Study}
+
+    %% A线：TTR
+    subgraph "A: Lexical Complexity"
+        BranchA --> TTR1[Per-Utterance TTR Calculation]
+        TTR1 --> TTR2[Comparative Analysis: Mean TTR]
+        TTR1 --> TTR3[Mixed-Effects Modeling: LMM]
+    end
+
+    %% B线：情感分析
+    subgraph "B: Sentiment Analysis"
+        BranchB --> S1{Dictionary Selection}
+        
+        subgraph "B1: AFINN (Lexicon-based)"
+            S1 --> B1a[Sentiment Scoring]
+            B1a --> B1b[Group Difference Testing]
+            B1a --> B1c[Statistical Modeling: GAMM]
+        end
+        
+        subgraph "B2: sentimentr (Context-aware)"
+            S1 --> B2a[Valence Shifting Analysis]
+            B2a --> B2b[Group Difference Testing]
+            B2a --> B2c[Statistical Modeling: GAMM]
+        end
+    end
+
+    %% C线：Judy vs Nick
+    subgraph "C: Diachronic Case Study (Judy vs. Nick)"
+        BranchC --> C1[Sub-corpus Extraction: Protagonists]
+        C1 --> C2[Narrative Arc Tracking: Sentiment/TTR]
+        C2 --> C3[Interactional Analysis & Comparison]
+    end
+
+    %% 样式
+    style Start fill:#f9f,stroke:#333,stroke-width:2px
+    style BranchA fill:#bbf,stroke:#333
+    style BranchB fill:#bbf,stroke:#333
+    style BranchC fill:#dfd,stroke:#333
+```
+
+## Research Question
 
 - Are there significant differences in linguistic complexity (measured by TTR) between male and female characters in *Zootopia*?
 
@@ -82,10 +136,13 @@ Notably, the film’s character design deliberately covers the characteristics a
 ### Origin - the subtitle data
 
 #### From HTML to CSV
-To analyze the discourse features of the characters in Zootopia, we collected the subtitles of the film from an online website (maybe a fan created it): <u>https://zootopia.fandom.com/wiki/Zootopia/Transcript</u>
-The html file was downloaded and saved as `data\Zootopia_Transcript _ Zootopia Wiki _ Fandom.html`. To simplify the process, transcripts were extracted manually from the html file and were saved as `data\Zootopia_Transcript_core.html`. To convert the html file to csv file, we used the following R code:
+To analyze the discourse features of the characters in Zootopia, we collected the subtitles of the film from an online website (maybe a fan created it): [Zootopia Fandom Wiki](https://zootopia.fandom.com/wiki/Zootopia/Transcript). The html file was downloaded and saved as `data\Zootopia_Transcript _ Zootopia Wiki _ Fandom.html`. To simplify the process, transcripts were extracted manually from the html file and were saved as `data\Zootopia_Transcript_core.html`. To convert the html file to csv file, we used the following R code:
 
 ```{r}
+#| label: from-html-to-csv
+#| warning: false
+#| echo: true
+
 # load necessary libraries
 if (!requireNamespace("pacman", quietly = TRUE)) {
   install.packages("pacman")
@@ -183,13 +240,17 @@ head(script_data)
 
 An examination of the dataset reveals three core columns:
 
-- The first column was labeled "Scene", which denotes the numerical identifier for each scene.
-- The second column was labeled "Character", which specifies the character delivering the dialogue.
-- The third column was labeled "Sayings", which contains the spoken lines of the character.
+- The first column was labeled `Scene`, which denotes the numerical identifier for each scene.
+- The second column was labeled `Character`, which specifies the character delivering the dialogue.
+- The third column was labeled `Sayings`, which contains the spoken lines of the character.
 
-Notably, the “Sayings” column included square bracket characters (“[” and ”]”), which were used to contextualize the dialogue. They were irrelevant to  the current study and hence were  removed. The following R code could be used to clean and standardize the dataset:
+Notably, the `Sayings` column included square bracket characters (`[` and `]`), which were used to contextualize the dialogue. They were irrelevant to  the current study and hence were  removed. The following R code could be used to clean and standardize the dataset:
 
 ```{r}
+#| label: cleaning-data
+#| warning: false
+#| echo: true
+
 # read in the processed data
 processed_data <- read.csv("data/Zootopia_Transcript_processed.csv", stringsAsFactors = FALSE, fileEncoding = "UTF-8")
 
@@ -225,15 +286,23 @@ head(cleaned_data)
 To validate dataset again, we check the dataset manually to see if there are any errors. After validation, we save the cleaned dataset as `data\zootopia_transcript_checked.csv`. The cleaned dataset of subtitles is ready for analysis.
 
 ```{r}
+#| label: looking-at-checked-data
+#| warning: false
+#| echo: true
+
 subtitle_data <- read.csv("data/Zootopia_Transcript_checked.csv")
 head(subtitle_data)
 ```
 
 ### Origin - the character information
 
-Recalling our research question, we want to investigate the gender representation of the characters in the movie. Thus, a character information file is needed. We search information about characters from the same website: <u>"https://zootopia.fandom.com/wiki/Category:Characters"</u>, and manually created a list of characters' information: `data\Character_info.csv`.
+Recalling our research question, we want to investigate the gender representation of the characters in the movie. Thus, a character information file is needed. We search information about characters from the same website: [Zootopia Fandom Wiki](https://zootopia.fandom.com/wiki/Zootopia/Transcript), and manually created a list of characters' information: `data\Character_info.csv`.
 
 ```{r}
+#| label: reading-character-info
+#| warning: false
+#| echo: true
+
 character_info <- read.csv("data\\Character_info.csv")
 head(character_info)
 ```
@@ -245,6 +314,10 @@ head(character_info)
 We then manually double-checked the two tables to ensure the matching of the linking field Character between them. Finally, we obtained two clean datasets that are ready for subsequent analysis.
 
 ```{r}
+#| label: checking-data
+#| warning: false
+#| echo: true
+
 #read data
 subtitle_characters <- unique(subtitle_data$Character)
 character_info_characters <- unique(character_info$Character)
@@ -276,12 +349,17 @@ It is difficult to analyze the group characters due to their lack of gender iden
 
 ### Scale
 
-Thus, we obtained two clean datasets ready for subsequent analysis, which were saved as two CSV files to facilitate further use.
-> `data\Zootopia_Transcript_checked.csv` and `data\Character_info.csv`
+Thus, we obtained two clean datasets ready for subsequent analysis, which were saved as two CSV files to facilitate further use. 
+
+>`data/Zootopia_Transcript_checked.csv` and `data/Character_info.csv`
 
 Here are the summary statistics of the two datasets:
 
 ```{r}
+#| label: data-summary
+#| warning: false
+#| echo: true
+
 subtitle_data <- read.csv("data/Zootopia_Transcript_checked.csv")
 character_info <- read.csv("data/Character_info.csv")
 
@@ -358,6 +436,10 @@ As the starting point, we will see the descriptive statistics of the data.
 Given that the research questions are character-centric, we directly examined the line count for each individual character.
 
 ```{r}
+#| label: descriptive-statistics-subtitle-data
+#| warning: false
+#| echo: true
+
 # Load necessary libraries
 pacman::p_load(  
   dplyr,        
@@ -500,6 +582,10 @@ The unequal number of male and female characters serves as a reminder that we sh
 For the purpose of quantitative text analysis, we first segmented the subtitle data and calculated the unique words (referring to the type count of words used by each character) to verify our segmentation results. As shown in the figure, the two protagonists stand out most prominently in the segmentation outcomes, which validates the effectiveness of the segmentation to a certain extent.
 
 ```{r}
+#| label: quantitative-text-analysis
+#| warning: false
+#| echo: true
+
 pacman::p_load(
   tidyverse,
   tidytext,             
