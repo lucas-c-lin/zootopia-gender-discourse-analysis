@@ -52,7 +52,7 @@ This repository contains a comprehensive digital humanities analysis of gender r
 ```
 ├── Main_Document.qmd           # Complete analysis with embedded R code and visualizations
 ├── Main_Document.html          # Compiled HTML report
-├── Used_Package.md             # Complete list of R packages with descriptions
+├── Used_Packages.md             # Complete list of R packages with descriptions
 ├── README.md                   # Project documentation
 ├── data/
 │   ├── Character_info.csv          # Character metadata (gender, species, alignment, diet)

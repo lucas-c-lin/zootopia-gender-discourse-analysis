@@ -14,7 +14,7 @@ format:
 ::: {.callout-note}
 This is a coursework assignment for the *Introduction to Digital Humanities* course. I have now revised and polished it slightly (the original submission was rushed to meet the deadline and rather rough), and I’ve uploaded it to GitHub for everyone to study together.
 
-2026/03/22 Beijing
+2026/03/22 Beijing Lucas Lin
 :::
 
 ::: {.callout-tip}
@@ -126,7 +126,7 @@ A diachronic deep-dive into the film's protagonists.
 
 :::
 
-## Research Question
+## Research Questions
 
 - Are there significant differences in linguistic complexity (measured by TTR) between male and female characters in *Zootopia*?
 
