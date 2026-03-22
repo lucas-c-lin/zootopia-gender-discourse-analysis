@@ -1,8 +1,6 @@
 # zootopia-gender-discourse-analysis
 A quantitative discourse analysis of Zootopia characters through a gender lens. Utilizing R (sentimentr, AFINN, Mixed-effects models) to examine Type-Token Ratio (TTR) and sentiment scores. Findings suggest gender de-differentiation in modern animation, supporting values of gender equality.
 
-# Gender Representation in Zootopia: A Digital Humanities Approach
-
 ## Project Overview
 
 This repository contains a comprehensive digital humanities analysis of gender representation in the animated film *Zootopia*. Using quantitative text analysis and sentiment analysis techniques, we examine discourse features of male and female characters to investigate whether the film reflects gender equality values through its narrative texts.
@@ -72,11 +70,17 @@ This repository contains a comprehensive digital humanities analysis of gender r
 ## Technical Stack
 
 ### R Packages (18 total)
+
 **Data Processing**: `dplyr`, `stringr`, `tidytext`
-**Web Scraping**: `xml2`, `rvest`
+
+**HTML Processing**: `xml2`, `rvest`
+
 **Visualization**: `ggplot2`, `viridis`, `scales`
+
 **Statistical Analysis**: `lme4`, `lmerTest`, `effsize`
+
 **Sentiment Analysis**: `sentimentr`, `syuzhet`
+
 **Model Visualization**: `dotwhisker`, `broom.mixed`, `sjPlot`
 
 ## Key Contributions
