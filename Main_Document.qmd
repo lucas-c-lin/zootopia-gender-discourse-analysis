@@ -13,6 +13,8 @@ format:
 
 ::: {.callout-note}
 This is a coursework assignment for the *Introduction to Digital Humanities* course. I have now revised and polished it slightly (the original submission was rushed to meet the deadline and rather rough), and I’ve uploaded it to GitHub for everyone to study together.
+
+2026/03/22 Beijing
 :::
 
 ::: {.callout-tip}
@@ -489,17 +491,21 @@ Here, we find that the line count of the two protagonists, Judy Hopps and Nick W
 In the code snippet below, categorical counting is performed on the character information.
 
 ```{r}
+#| label: gender-dietary-count
+#| warning: false
+#| echo: true
+
 dsci_df_counts <- character_info |>
   count(Gender, Dietary_Type)
 
 ggplot(dsci_df_counts, aes(x = Dietary_Type, y = n, fill = Gender)) +
   geom_col(position = position_dodge(width = 0.8), width = 0.7) +
-  geom_text(aes(label = n), 
+  geom_text(aes(label = n),
             position = position_dodge(width = 0.8),
             vjust = -0.5, size = 3.5) +
   labs(title = "Characters by Gender and Dietary Type",
-       x = "Dietary Type", 
-       y = "Count", 
+       x = "Dietary Type",
+       y = "Count",
        fill = "Gender") +
   scale_fill_manual(values = c("male" = "#3498db", "female" = "#e74c3c")) +
   theme_minimal() +
@@ -507,6 +513,10 @@ ggplot(dsci_df_counts, aes(x = Dietary_Type, y = n, fill = Gender)) +
 ```
 
 ```{r}
+#| label: gender-alignment-count
+#| warning: false
+#| echo: true
+
 dsci_df_counts <- character_info |>
   count(Gender, Alignment)
 
@@ -535,6 +545,10 @@ We found that there were no values for the `bad` × `female` interaction term. M
 The distribution of the simplified data is shown in the two figures below.
 
 ```{r}
+#| label: simplify-dietary-alignment
+#| warning: false
+#| echo: true
+
 character_info <- character_info %>%
   mutate(
     Dietary_Type = case_when(
@@ -549,17 +563,21 @@ character_info <- character_info %>%
 ```
 
 ```{r}
+#| label: gender-dietary-count-simplified
+#| warning: false
+#| echo: true
+
 dsci_df_counts <- character_info |>
   count(Gender, Dietary_Type)
 
 ggplot(dsci_df_counts, aes(x = Dietary_Type, y = n, fill = Gender)) +
   geom_col(position = position_dodge(width = 0.8), width = 0.7) +
-  geom_text(aes(label = n), 
+  geom_text(aes(label = n),
             position = position_dodge(width = 0.8),
             vjust = -0.5, size = 3.5) +
   labs(title = "Characters by Gender and Dietary Type",
-       x = "Dietary Type", 
-       y = "Count", 
+       x = "Dietary Type",
+       y = "Count",
        fill = "Gender") +
   scale_fill_manual(values = c("male" = "#3498db", "female" = "#e74c3c")) +
   theme_minimal() +
@@ -567,6 +585,10 @@ ggplot(dsci_df_counts, aes(x = Dietary_Type, y = n, fill = Gender)) +
 ```
 
 ```{r}
+#| label: gender-alignment-count-simplified
+#| warning: false
+#| echo: true
+
 dsci_df_counts <- character_info |>
   count(Gender, Alignment)
 
@@ -654,6 +676,10 @@ Here we excluded characters with a total line word count of no more than 5 throu
 We can see the vocabulary size of each character. To answer the research question, we would connect the vocabulary size with the gender of the characters.
 
 ```{r}
+#| label: gender-vocabulary-comparison
+#| warning: false
+#| echo: true
+
 pacman::p_load(
   scales,
   effsize
@@ -741,6 +767,10 @@ point_plot
 By looking at the two plots, we can see the gender pattern in linguistics complexity of subtitle data. We can see there is just a little difference in TTR between different gender. To validate the significance of the gender pattern, we can conduct a hypothesis test.
 
 ```{r}
+#| label: ttr-shapiro-test
+#| warning: false
+#| echo: true
+
 male_data <- character_vocabulary_size_with_info$vocab_ratio[
   character_vocabulary_size_with_info$Gender == "male"
 ]
@@ -758,7 +788,9 @@ cat("Male Shapiro-Wilk p-value:", shapiro_male$p.value, "\n","Female Shapiro-Wil
 The Shapiro-Wilk test results show p-values of 0.0914 for males and 0.1640 for females, both exceeding 0.05. Thus, the data of both groups conform to a normal distribution (*p* > 0.05). Thus, t-test is adopted.
 
 ```{r}
-#| label: T test for TTR between genders and visualization
+#| label: ttr-t-test-visualization
+#| warning: false
+#| echo: true
 
 male_vocab <- character_vocabulary_size_with_info$vocab_ratio[character_vocabulary_size_with_info$Gender == "male"]
 female_vocab <- character_vocabulary_size_with_info$vocab_ratio[character_vocabulary_size_with_info$Gender == "female"]
@@ -903,6 +935,10 @@ From the results of the Wilcoxon rank sum test with continuity correction (condu
 However, returning to the original data, we calculated the TTR value for each character by aggregating all their sayings (a saying refers to a complete subtitle segment) to derive an overall TTR. Nevertheless, if we calculate the TTR for individual sayings and treat the entire dataset as a nested structure, the mixed-effects model appears to be a suitable data analysis method. Accordingly, we computed the TTR for each saying and adopted the mixed-effects model for further analysis.
 
 ```{r}
+#| label: ttr-per-saying-calc
+#| warning: false
+#| echo: true
+
 character_ttr_per_saying <- subtitle_tokens |>
   group_by(Character) |>
   mutate(total_words_pretest = n()) |>
@@ -924,6 +960,10 @@ character_ttr_per_saying_with_info <- character_ttr_per_saying |>
 ```
 
 ```{r}
+#| label: mixed-model-ttr-single
+#| warning: false
+#| echo: true
+
 pacman::p_load(
   lme4,
   lmerTest,
@@ -952,7 +992,7 @@ models <- list(
   Alignment = mixed_model_ttr_alignment
 )
 
-dwplot(models, 
+dwplot(models,
        effects = "fixed",
        show_intercept = FALSE) +
   theme_bw() +
@@ -965,6 +1005,10 @@ dwplot(models,
 As presented in the figure, gender, dietary type and alignment were included as fixed effects, and none of these variables had a statistically significant effect on TTR.
 
 ```{r}
+#| label: mixed-model-ttr-intercept
+#| warning: false
+#| echo: true
+
 model_main <- lmer(vocab_ratio ~ Gender + Dietary_Type + Alignment + (1 | Character),
                    data = character_ttr_per_saying_with_info)
 #summary(model_main)
@@ -985,8 +1029,8 @@ model_full <- lmer(vocab_ratio ~ Gender * Dietary_Type + Gender * Alignment + (1
 #summary(model_full)
 
 # Three-way
-model_threeway <- lmer(vocab_ratio ~ Gender * Dietary_Type * Alignment + 
-                       (1 | Character), 
+model_threeway <- lmer(vocab_ratio ~ Gender * Dietary_Type * Alignment +
+                       (1 | Character),
                      data = character_ttr_per_saying_with_info,
                      REML = TRUE)
 #summary(model_threeway)
@@ -1027,10 +1071,14 @@ Therefore, we can conclude that, there is no statistically significant differenc
 For lexicon-based sentiment analysis, we should first tokenize the data.
 
 ```{r}
+#| label: subtitle-tokenization
+#| warning: false
+#| echo: true
+
 pacman::p_load(
   tidyverse,
-  tidytext,       
-  dplyr,        
+  tidytext,
+  dplyr,
   ggplot2,
   textdata,
   effsize
@@ -1054,9 +1102,13 @@ We can use the AFINN dictionary to calculate the sentiment score for each word, 
 :::
 
 ```{r}
+#| label: afinn-dictionary-join
+#| warning: false
+#| echo: true
+
 # read afinn dictionary
-afinn_dic <- read_delim("dictionary/AFINN/AFINN-111.txt", 
-                        delim = "\t", 
+afinn_dic <- read_delim("dictionary/AFINN/AFINN-111.txt",
+                        delim = "\t",
                         col_names = c("word", "sentiment_value"),
                         locale = locale(encoding = "UTF-8"),
                         show_col_types = FALSE)
@@ -1103,7 +1155,11 @@ character_sentiment_afinn_plot
 To answer the research question, we will compare the sentiment score between male and female characters.
 
 ```{r}
-character_sentiment_afinn_with_info <- character_sentiment_afinn |> 
+#| label: sentiment-gender-stats
+#| warning: false
+#| echo: true
+
+character_sentiment_afinn_with_info <- character_sentiment_afinn |>
   inner_join(character_info, by = "Character")
 #head(character_sentiment_with_info)
 
@@ -1135,6 +1191,10 @@ cat("Male Shapiro-Wilk p-value:", shapiro_male$p.value, "\n",
 The data from both groups are normally distributed and exhibit homogeneity of variances, meeting the assumptions for the standard independent samples t-test.
 
 ```{r}
+#| label: sentiment-t-test-visualization
+#| warning: false
+#| echo: true
+
 plot_data <- rbind(
   data.frame(Gender = "male", Sentiment = male_sentiment),
   data.frame(Gender = "female", Sentiment = female_sentiment)
@@ -1143,8 +1203,8 @@ plot_data <- rbind(
 equal_var <- TRUE
 test_method <- "t-test"
 
-t_test_result <- t.test(Sentiment ~ Gender, 
-                        data = plot_data, 
+t_test_result <- t.test(Sentiment ~ Gender,
+                        data = plot_data,
                         var.equal = equal_var)
 
 cohen_d <- cohen.d(Sentiment ~ Gender, data = plot_data)
@@ -1186,31 +1246,31 @@ p <- ggplot(plot_data, aes(x = Gender, y = Sentiment, fill = Gender)) +
     linewidth = 0.8
   ) +
   scale_fill_manual(values = my_colors) +
-  
+
   labs(
     title = "Sentiment Score by Gender",
-    subtitle = sprintf("%s Result (Homogeneity of variance test: p = %.3f)", 
+    subtitle = sprintf("%s Result (Homogeneity of variance test: p = %.3f)",
                       test_method, var_test$p.value),
     x = "Gender",
     y = "Sentiment score (avg_sentiment)",
-    caption = sprintf("male: n = %d, female: n = %d\nCohen's d = %.3f (95%% CI: %.3f, %.3f)", 
-                     length(male_sentiment), 
+    caption = sprintf("male: n = %d, female: n = %d\nCohen's d = %.3f (95%% CI: %.3f, %.3f)",
+                     length(male_sentiment),
                      length(female_sentiment),
                      cohen_d$estimate,
                      cohen_d$conf.int[1],
                      cohen_d$conf.int[2])
   ) +
-  
+
   theme_minimal(base_size = 14) +
   theme(
     plot.title = element_text(
-      hjust = 0.5, 
-      face = "bold", 
+      hjust = 0.5,
+      face = "bold",
       size = 16,
       margin = margin(b = 10)
     ),
     plot.subtitle = element_text(
-      hjust = 0.5, 
+      hjust = 0.5,
       size = 12,
       color = "gray40",
       margin = margin(b = 15)
@@ -1227,25 +1287,25 @@ p <- ggplot(plot_data, aes(x = Gender, y = Sentiment, fill = Gender)) +
     panel.grid.minor = element_blank(),
     panel.background = element_rect(fill = "white", color = NA),
     plot.background = element_rect(fill = "white", color = NA)
-  )
+  ) 
 
-# for p-value mark
-y_max <- max(plot_data$Sentiment) * 1.15
-format_p_value <- function(p) {
-  if (p < 0.001) {
-    return("p < 0.001")
-  } else if (p < 0.01) {
-    return("p < 0.01")
-  } else if (p < 0.05) {
-    return("p < 0.05")
-  } else {
-    return(sprintf("p = %.3f", p))
+  # for p-value mark
+  y_max <- max(plot_data$Sentiment) * 1.15
+  format_p_value <- function(p) {
+    if (p < 0.001) {
+      return("p < 0.001")
+    } else if (p < 0.01) {
+      return("p < 0.01")
+    } else if (p < 0.05) {
+      return(sprintf("p = %.3f", p))
+    } else {
+      return(sprintf("p = %.3f", p))
+    }
   }
-}
 
-p_value_text <- format_p_value(t_test_result$p.value)
+  p_value_text <- format_p_value(t_test_result$p.value)
 
-p <- p + 
+  p <- p +
   geom_segment(
     aes(x = 1, xend = 2, y = y_max * 0.90, yend = y_max * 0.90),
     color = "black",
@@ -1263,8 +1323,8 @@ p <- p +
     "text",
     x = 1.5,
     y = y_max * 0.81,
-    label = sprintf("t(%d) = %.2f", 
-                    round(t_test_result$parameter, 0), 
+    label = sprintf("t(%d) = %.2f",
+                    round(t_test_result$parameter, 0),
                     t_test_result$statistic),
     size = 4,
     color = "gray40"
@@ -1276,6 +1336,10 @@ print(p)
 Here we can see that the sentiment scores of female characters were slightly higher than those of male characters, yet there was no statistically significant difference in sentiment scores between the two genders.
 
 ```{r}
+#| label: saying-sentiment-word-calc
+#| warning: false
+#| echo: true
+
 #head(subtitle_tokens_afinn)
 saying_sentiment_word <- subtitle_tokens_afinn |>
   group_by(id, Character) |>
@@ -1293,6 +1357,10 @@ saying_sentiment_word_with_info <- saying_sentiment_word |>
 ```
 
 ```{r}
+#| label: saying-sentiment-word-plot
+#| warning: false
+#| echo: true
+
 saying_sentiment_word_with_info_plot <- saying_sentiment_word_with_info |>
   filter(!is.na(avg_sentiment_saying)) |>
   ggplot(aes(x = Gender, y = avg_sentiment_saying, fill = Gender)) +
@@ -1304,6 +1372,10 @@ saying_sentiment_word_with_info_plot
 ```
 
 ```{r}
+#| label: mixed-model-word-level-single
+#| warning: false
+#| echo: true
+
 pacman::p_load(
   lme4,
   lmerTest
@@ -1330,7 +1402,7 @@ models <- list(
   Alignment = mixed_model_word_level_alignment
 )
 
-dwplot(models, 
+dwplot(models,
        effects = "fixed",
        show_intercept = FALSE) +
   theme_bw() +
@@ -1343,6 +1415,10 @@ dwplot(models,
 This figure demonstrates that gender and dietary type, as fixed effects, had no significant impact on emotional valence. **In contrast, alignment, as a fixed effect, exerted a significant influence on emotional valence. This partly validates the effectiveness of our emotional analysis method.**
 
 ```{r}
+#| label: mixed-model-word-level-intercept
+#| warning: false
+#| echo: true
+
 model_main <- lmer(avg_sentiment_saying ~ Gender + Dietary_Type + Alignment + (1 | Character),
                    data = saying_sentiment_word_with_info)
 #summary(model_main)
@@ -1362,8 +1438,8 @@ model_full <- lmer(avg_sentiment_saying ~ Gender * Dietary_Type + Gender * Align
                    data = saying_sentiment_word_with_info)
 #summary(model_full)
 
-model_threeway <- lmer(avg_sentiment_saying ~ Gender * Dietary_Type * Alignment + 
-                       (1 | Character), 
+model_threeway <- lmer(avg_sentiment_saying ~ Gender * Dietary_Type * Alignment +
+                       (1 | Character),
                      data = saying_sentiment_word_with_info,
                      REML = TRUE)
 #summary(model_threeway)
@@ -1399,6 +1475,10 @@ However, for movie subtitles, we observed that there are lots of word without se
 >`sentimentr` is designed to quickly calculate text polarity sentiment in the English language at the sentence level
 
 ```{r}
+#| label: sentimentr-analysis
+#| warning: false
+#| echo: true
+
 pacman::p_load(
   sentimentr,
   effsize
@@ -1457,8 +1537,12 @@ ggplot(character_sentiment, aes(x = reorder(Character, avg_sentiment), y = avg_s
 ```
 
 ```{r}
+#| label: sentence-sentiment-gender-stats
+#| warning: false
+#| echo: true
+
 character_sentiment_with_info <- character_sentiment |>
-  inner_join(character_info, by = "Character")    
+  inner_join(character_info, by = "Character")
 
 gender_sentiment <- character_sentiment_with_info %>%
   group_by(Gender) %>%
@@ -1624,14 +1708,18 @@ This plot visualizes the distribution of average sentiment scores across female 
 
 Key results:
 - Significance: The Mann-Whitney test yielded W = 309.00 and p = 0.030 (marked as *), indicating **a statistically significant difference** in sentiment scores between genders (at the α = 0.05 level).
-- Effect size: Cliff’s delta = 0.398 (95% CI: 0.006, 0.684), suggesting **a small-to-moderate magnitude** of the gender difference (the confidence interval barely excludes 0, aligning with a marginally strong effect).
+- Effect size: Cliff's delta = 0.398 (95% CI: 0.006, 0.684), suggesting **a small-to-moderate magnitude** of the gender difference (the confidence interval barely excludes 0, aligning with a marginally strong effect).
 
 ```{r}
+#| label: sentence-sentiment-gender-plot
+#| warning: false
+#| echo: true
+
 sentence_sentiment_with_character_with_info <- sentence_sentiment_with_character |>
   inner_join(character_info, by = c("Character"), relationship = "many-to-many")
   #filter(sentiment_score != 0)
 
-ggplot(sentence_sentiment_with_character_with_info, 
+ggplot(sentence_sentiment_with_character_with_info,
        aes(x = Gender, y = sentiment_score, fill = Gender)) +
   geom_boxplot() +
   geom_jitter(alpha = 0.3, width = 0.2) +
@@ -1639,9 +1727,13 @@ ggplot(sentence_sentiment_with_character_with_info,
   theme_minimal()
 ```
 
-To investigate the relationship between gender and sentiment score, mixed effect model is used. 
+To investigate the relationship between gender and sentiment score, mixed effect model is used.
 
 ```{r}
+#| label: mixed-model-sentence-single
+#| warning: false
+#| echo: true
+
 pacman::p_load(
   lme4,
   lmerTest,
@@ -1670,7 +1762,7 @@ models <- list(
   Alignment = mixed_model_sen_alignment
 )
 
-dwplot(models, 
+dwplot(models,
        effects = "fixed",
        show_intercept = FALSE) +
   theme_bw() +
@@ -1685,6 +1777,9 @@ This figure demonstrates that gender and dietary type, as fixed effects, had no 
 The model indicates that while gender has a negative effect on sentiment score, this effect is not statistically significant at the conventional α = 0.05 level. The random intercept for Character accounts for a meaningful portion of the variance, suggesting that character identity significantly influences sentiment scores.
 
 ```{r}
+#| label: mixed-model-sentence-intercept-anova
+#| warning: false
+#| echo: true
 
 model_main <- lmer(sentiment_score ~ Gender + Dietary_Type + Alignment + (1 | Character),
                    data = sentence_sentiment_with_character_with_info)
@@ -1704,8 +1799,8 @@ model_full <- lmer(sentiment_score ~ Gender * Dietary_Type + Gender * Alignment 
                    data = sentence_sentiment_with_character_with_info)
 #summary(model_full)
 
-model_threeway <- lmer(sentiment_score ~ Gender * Dietary_Type * Alignment + 
-                       (1 | Character), 
+model_threeway <- lmer(sentiment_score ~ Gender * Dietary_Type * Alignment +
+                       (1 | Character),
                      data = sentence_sentiment_with_character_with_info,
                      REML = TRUE)
 #summary(model_threeway)
@@ -1734,11 +1829,11 @@ intercept_results$signif <- ifelse(intercept_results$p_value < 0.001, "***",
 print(intercept_results)
 
 anova_results <- anova(
-  model_main, 
-  model_gender_diet,  
-  model_gender_align,  
-  model_full,  
-  model_threeway  
+  model_main,
+  model_gender_diet,
+  model_gender_align,
+  model_full,
+  model_threeway
 )
 
 print(anova_results)
@@ -1755,6 +1850,10 @@ As the two most important protagonists, their similarities across various dimens
 From previous analysis, we can see that there are little differences between their linguistic styles and sentiment scores.
 
 ```{r}
+#| label: judy-nick-comparison
+#| warning: false
+#| echo: true
+
 vocab_data <- character_vocabulary_size_with_info %>%
   filter(Character %in% c("Judy Hopps", "Nick Wilde")) %>%
   select(Character, vocab_ratio)
@@ -1765,9 +1864,9 @@ sentiment_data <- character_sentiment %>%
 
 plot_data <- full_join(vocab_data, sentiment_data, by = "Character")
 
-par(mar = c(5, 4, 4, 4) + 0.1)  
+par(mar = c(5, 4, 4, 4) + 0.1)
 
-bar_pos <- barplot(plot_data$vocab_ratio, 
+bar_pos <- barplot(plot_data$vocab_ratio,
                    names.arg = plot_data$Character,
                    ylim = c(0, max(plot_data$vocab_ratio) * 1.2),
                    col = "steelblue",
@@ -1777,22 +1876,22 @@ bar_pos <- barplot(plot_data$vocab_ratio,
 
 par(new = TRUE)
 plot(bar_pos, plot_data$avg_sentiment,
-     type = "o", 
-     pch = 16, 
+     type = "o",
+     pch = 16,
      col = "darkorange",
      lwd = 2,
-     axes = FALSE, 
-     xlab = "", 
+     axes = FALSE,
+     xlab = "",
      ylab = "",
      ylim = c(0, max(plot_data$avg_sentiment) * 1.2))
 
 axis(side = 4, col = "darkorange", col.axis = "darkorange")
 mtext("Mean Sentiment Score", side = 4, line = 3, col = "darkorange")
 
-legend("topleft", 
+legend("topleft",
        legend = c("Vocabulary Ratio", "Mean Sentiment Score"),
        col = c("steelblue", "darkorange"),
-       lty = c(1, 1), 
+       lty = c(1, 1),
        lwd = c(10, 2),
        pch = c(NA, 16),
        bty = "n")
@@ -1800,6 +1899,10 @@ legend("topleft",
 
 
 ```{r}
+#| label: judy-nick-top-words
+#| warning: false
+#| echo: true
+
 # Calculate top words per character
 top_words <- subtitle_tokens |>
   filter(Character %in% c("Judy Hopps", "Nick Wilde")) |>
@@ -1830,18 +1933,22 @@ top_words |>
 ```
 
 ```{r}
+#| label: judy-nick-tfidf
+#| warning: false
+#| echo: true
+
 # Calculate TF-IDF
 character_tfidf <- subtitle_tokens |>
   # Step 1: Count how many times each word appears for each character
   count(Character, word) |>
-  
+
   # Step 2: Calculate TF-IDF scores
   # - word: the term we're analyzing
   # - speaker: the "document" (each character is one document)
   # - n: the count/frequency of each word
   # This creates three new columns: tf, idf, and tf_idf
   bind_tf_idf(word, Character, n) |>
-  
+
   # Step 3: For each character, find their top 10 most distinctive words
   group_by(Character) |>
   slice_max(tf_idf, n = 10) |>  # Keep only the 10 highest tf_idf scores
@@ -1870,6 +1977,10 @@ character_tfidf |>
 ```
 
 ```{r}
+#| label: judy-nick-emotion-nrc
+#| warning: false
+#| echo: true
+
 pacman::p_load(
   syuzhet
 )
@@ -1911,6 +2022,10 @@ ggplot(emotion_proportions_judy_nick, aes(x = reorder(sentiment, percentage), y 
 ```
 
 ```{r}
+#| label: gender-emotion-nrc
+#| warning: false
+#| echo: true
+
 subtitle_tokens_nrc_with_character_info <- subtitle_tokens_nrc |>
   left_join(character_info, by = "Character")
 
